@@ -95,7 +95,7 @@ def render_content_creation_tool(api_keys):
     
     # Vùng hiển thị kết quả
     if st.session_state['show_result_creator'] and st.session_state['generated_text_creator']:
-        display_results(st.session_state['generated_text_creator'], "copy_text_area_creator")
+        display_results(st.session_state['generated_text_creator'])
 
 def get_creator_prompt(san_pham, diem_nhan, lien_he):
     """Tạo prompt cho chức năng sáng tạo nội dung."""
@@ -171,7 +171,7 @@ def render_rewriter_tool(api_keys):
 
     # Vùng hiển thị kết quả
     if st.session_state['show_result_rewriter'] and st.session_state['generated_text_rewriter']:
-        display_results(st.session_state['generated_text_rewriter'], "copy_text_area_rewriter")
+        display_results(st.session_state['generated_text_rewriter'])
 
 def get_rewriter_prompt(original_text):
     """Tạo prompt cho chức năng viết lại nội dung."""
@@ -196,7 +196,7 @@ def get_rewriter_prompt(original_text):
 
 # --- PHẦN 4: HÀM TIỆN ÍCH CHUNG (HIỂN THỊ KẾT QUẢ) ---
 
-def display_results(text, copy_key):
+def display_results(text):
     """Hàm chung để hiển thị kết quả và các nút thao tác."""
     with st.container(border=True):
         st.subheader("2. Kết quả")
@@ -206,30 +206,10 @@ def display_results(text, copy_key):
         
         st.subheader("3. Sao chép nội dung")
         
-        js_code = f"""
-        <script>
-            function selectText_{copy_key}() {{
-                const textArea = document.getElementById("{copy_key}");
-                if (textArea) {{
-                    textArea.select();
-                    textArea.setSelectionRange(0, 99999);
-                }}
-            }}
-        </script>
-        """
-        st.html(js_code)
+        st.info("💡 **Hướng dẫn:** Để sao chép, hãy nhấn vào **biểu tượng sao chép** 📋 ở góc trên bên phải của khung nội dung dưới đây.")
         
-        st.text_area(
-            label="Nội dung để sao chép:",
-            value=text,
-            height=250,
-            key=copy_key
-        )
-        
-        if st.button("Chọn tất cả để sao chép 📋", use_container_width=True, key=f"btn_{copy_key}"):
-            components.html(f'<script>selectText_{copy_key}();</script>', height=0)
-        
-        st.info("**Hướng dẫn:** 1. Nhấn nút 'Chọn tất cả'. 2. Nhấn `Ctrl+C` hoặc dùng menu 'Copy' của điện thoại.")
+        # Sử dụng st.code để hiển thị văn bản với nút copy tích hợp, đáng tin cậy.
+        st.code(text, language=None)
 
 # --- PHẦN 5: CHƯƠNG TRÌNH CHÍNH ---
 
